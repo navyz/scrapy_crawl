@@ -47,18 +47,6 @@ class TttSpider(CrawlSpider):
 	def parse_item(self, response):
 		loader = ItemLoader(item = ImageItem(), response = response)
 		
-		urls = response.xpath('(//script/text())').re("var slides_page_url_path[^\]]+\]")
-		if urls and len(urls) > 0:
-			urls = urls[0].replace("var slides_page_url_path = ", "") + "]"
-			urls = urls.replace("]]", "]")
-			urls = urls.replace("];", "]").strip() 
-
-			urls = eval(urls)
-
-			for url in urls:
-				loader. add_value('image_urls', url.strip())
-		else:
-			print ("----------------------------------------------------------------------------")
 
 		story_name = response.xpath('//*[@id="chapter-detail"]/div/ol/li[2]/a/text()').extract_first()
 
@@ -100,7 +88,6 @@ class TttSpider(CrawlSpider):
 			summary = re.sub('\n', ',', summary).strip()
 
 
-		print ("==========================================zzzz 4")
 		print (response.url)
 		print (summary)
 		print (story_name)
@@ -110,6 +97,7 @@ class TttSpider(CrawlSpider):
 
 		if (story_name or chapter_name or category and author_name or summary):
 
+			print ("==========================================zzzz 5")
 			u = Utility()
 			story_id = u.convertStringToId(story_name)
 
@@ -143,6 +131,22 @@ class TttSpider(CrawlSpider):
 
 			if summary:
 				loader.add_value('summary', summary) 
+
+			urls = response.xpath('(//script/text())').re("var slides_page_url_path[^\]]+\]")
+			if urls and len(urls) > 0:
+				urls = urls[0].replace("var slides_page_url_path = ", "")
+
+				urlArr = urls.split(",")
+				urlArr2 = []
+				for url in urlArr:
+					url = url.strip('[];"\'').strip()
+					urlArr2.append(url)
+					
+				loader. add_value('image_urls', urlArr2)
+
+			else:
+				print ("----------------------------------------------------------------------------")
+
 
 			return loader.load_item() 
 
