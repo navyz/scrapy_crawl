@@ -32,7 +32,7 @@ class TttSpider(CrawlSpider):
 	}
 
 	allowed_domains = ['truyentranhtuan.com']
-	start_urls = ['http://truyentranhtuan.com/', "http://truyentranhtuan.com/cao-thu-can-ve-cua-hoa-khoi/"]
+	start_urls = ['http://truyentranhtuan.com/', "http://truyentranhtuan.com/rurouni-kenshin-hokkai-arc/"]
 
 	rules = (
 	    Rule(LinkExtractor(allow=('.',), deny=('returnUrl','.*cap-nhat-chuong.*'), unique=True), callback='parse_item', follow=True),
@@ -76,7 +76,7 @@ class TttSpider(CrawlSpider):
 
 
 		if chapter_name: chapter_name = chapter_name.strip()
-		if author_name: author_name = author_name.strip()
+		if author_name and len(author_name) > 0: author_name = author_name.strip()
 		if translator_name: translator_name = translator_name.strip()
 		if not chapter_total: chapter_total = 0
 
@@ -128,7 +128,6 @@ class TttSpider(CrawlSpider):
 				author_name = chapter_total
 
 			if author_name:
-				author_name = author_name.strip()
 				loader.add_value('author_name', author_name) 
 
 			if category:
