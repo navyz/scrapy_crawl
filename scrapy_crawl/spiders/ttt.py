@@ -49,8 +49,10 @@ class TttSpider(CrawlSpider):
 		
 		urls = response.xpath('(//script/text())').re("var slides_page_url_path[^\]]+\]")
 		if urls and len(urls) > 0:
-			urls = urls[0].replace("var slides_page_url_path = ", "")
-			urls = urls.replace("];", "]")
+			urls = urls[0].replace("var slides_page_url_path = ", "") + "]"
+			urls = urls.replace("]]", "]")
+			urls = urls.replace("];", "]").strip() 
+
 			urls = eval(urls)
 
 			for url in urls:
