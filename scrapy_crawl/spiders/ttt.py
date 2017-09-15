@@ -24,8 +24,8 @@ class TttSpider(CrawlSpider):
 			'scrapy_crawl.mongo_pipeline.MongoPipeline': 20,
 			'scrapy_crawl.images_pipelines.MyImagePipeline': 30
 		},
-		'IMAGES_STORE': '/exdata/download/comic/tttx/',
-		'JOBDIR': '/exdata/download/comic/ttt/_job/',
+		'IMAGES_STORE': '/exdata/download/comic/ttt/',
+		'JOBDIR': '/exdata/download/comic/ttt/_job1/',
 		'IM_MODULE': 'scrapy_crawl.images_pipelines.MyImagePipeline',
 		'IMAGES_MIN_HEIGHT': 300,
 		'IMAGES_MIN_WIDTH': 200
