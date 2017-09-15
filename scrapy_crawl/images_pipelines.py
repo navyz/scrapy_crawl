@@ -41,7 +41,7 @@ class MyImagePipeline(ImagesPipeline):
 		if not image_paths:
 		    raise DropItem("Item contains no images")
 		#print (image_paths)
-		item['image_paths'] = image_paths
+		#item['image_paths'] = image_paths
 		return item
 
 	# Override the convert_image method to disable image conversion    

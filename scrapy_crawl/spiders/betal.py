@@ -14,7 +14,7 @@ import unicodedata
 class BetalSpider(CrawlSpider):
 	name = "betal"
 
-	mongo_collection = "betal"
+	mongo_collection = "betal2"
 	custom_settings = {
 		'SOME_SETTING': 'some value',
 		'MONGO_COLLECTION': "betal",
