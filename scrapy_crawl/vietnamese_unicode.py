@@ -1,7 +1,5 @@
 #from unidecode import unidecode
 import sys
-import unicodedata
-
 
 class VietnameseProcessing():
 	def vietnameseToLatin(self, text):

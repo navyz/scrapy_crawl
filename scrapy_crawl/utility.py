@@ -1,7 +1,5 @@
 from .vietnamese_unicode import VietnameseProcessing
 import re
-import unicodedata
-import chardet
 
 class Utility():
 	def convertStringToId(self, text):
