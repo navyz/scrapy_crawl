@@ -47,7 +47,7 @@ class TttSpider(CrawlSpider):
 	def parse_item(self, response):
 		loader = ItemLoader(item = ImageItem(), response = response)
 		
-		urls = response.xpath('(//script/text())').re("var slides_page_url_path.+")
+		urls = response.xpath('(//script/text())').re("var slides_page_url_path[^\]]+\]")
 		if urls and len(urls) > 0:
 			urls = urls[0].replace("var slides_page_url_path = ", "")
 			urls = urls.replace("];", "]")
