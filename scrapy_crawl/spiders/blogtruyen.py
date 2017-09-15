@@ -31,10 +31,10 @@ class BlogSpider(CrawlSpider):
 	}
 
 
-	allowed_domains = ['blogtruyen.com', 'blogspot.com']
+	allowed_domains = ['blogtruyen.com']
 	start_urls = ['http://www.blogtruyen.com', 'http://www.blogtruyen.com/c262539/in-a-different-world-with-a-smartphone-episode-1']
 	rules = (
-	    Rule(LinkExtractor(allow=('.',), deny=('returnUrl','.*cap-nhat-chuong.*'), unique=True), callback='parse_item', follow=True),
+	    Rule(LinkExtractor(allow=('.',), deny=('returnUrl','.*cap-nhat-chuong.*', 'm.blogtruyen.com'), unique=True), callback='parse_item', follow=True),
 	)
 
 
