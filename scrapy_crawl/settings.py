@@ -33,7 +33,7 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, lik
 
 
 # Random interval between 0.5 and 1.5 * DOWNLOAD_DELAY
-DOWNLOAD_DELAY = 0
+DOWNLOAD_DELAY = 0.2
 
 # USER_AGENT = '%s/%s' % (BOT_NAME, BOT_VERSION)
 
