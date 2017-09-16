@@ -33,7 +33,7 @@ class MangakSpider(CrawlSpider):
 	allowed_domains = ['mangak.info']
 	start_urls = ['http://mangak.info/', 'http://mangak.info/hot/']
 	rules = (
-	    Rule(LinkExtractor(allow=('.',), deny=('returnUrl','.*cap-nhat-chuong.*'), unique=True), callback='parse_item', follow=True),
+	    Rule(LinkExtractor(allow=('.',), deny=('returnUrl','redirect_to', 'wordpress_social_authenticate', 'wp-login', 'replytocom'), unique=True), callback='parse_item', follow=True),
 	)
 
 
