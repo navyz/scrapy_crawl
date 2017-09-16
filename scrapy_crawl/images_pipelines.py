@@ -58,6 +58,5 @@ class MyImagePipeline(ImagesPipeline):
 		#print ("===============================")
 
 		full_path = request.meta['folder'] + str(request.meta['file_no']).zfill(6) + '.jpg'
-		print (full_path)
 		return  full_path
 	

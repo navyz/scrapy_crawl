@@ -11,28 +11,27 @@ from bs4 import BeautifulSoup
 import array
 import unicodedata
 
-class BetalSpider(CrawlSpider):
-	name = "betal"
+class MangakSpider(CrawlSpider):
+	name = "mangak"
 
-	mongo_collection = "betal"
+	mongo_collection = "mangak"
 	custom_settings = {
-		'SOME_SETTING': 'some value',
-		'MONGO_COLLECTION': "betal",
+		'MONGO_COLLECTION': "mangak",
 		'ITEM_PIPELINES': {
 			'scrapy_crawl.cleaning_pipeline.CleaningPipeline': 10,
 			'scrapy_crawl.mongo_pipeline.MongoPipeline': 20,
 			'scrapy_crawl.images_pipelines.MyImagePipeline': 30
 		},
-		'IMAGES_STORE': '/exdata/download/comic/betal/',
-		'JOBDIR': '/exdata/download/comic/betal/_job/',
+		'IMAGES_STORE': '/exdata/download/comic/mangak/',
+		'JOBDIR': '/exdata/download/comic/mangak/_job/',
 		'IM_MODULE': 'scrapy_crawl.images_pipelines.MyImagePipeline',
 		'IMAGES_MIN_HEIGHT': 300,
 		'IMAGES_MIN_WIDTH': 200,
-                'LOG_LEVEL': 'INFO'
+                'LOG_LEVEL': 'DEBUG'
 	}
 
-	allowed_domains = ['www.hentailx.com']
-	start_urls = ['http://www.hentailx.com']
+	allowed_domains = ['mangak.info']
+	start_urls = ['http://mangak.info/', 'http://mangak.info/hot/']
 	rules = (
 	    Rule(LinkExtractor(allow=('.',), deny=('returnUrl','.*cap-nhat-chuong.*'), unique=True), callback='parse_item', follow=True),
 	)
@@ -42,19 +41,19 @@ class BetalSpider(CrawlSpider):
 		loader = ItemLoader(item = ImageItem(), response = response)
 		
 		loader.add_xpath('image_urls', '//img/@src[string-length( text()) < 1000]') 
-		story_name = response.xpath('//*[@id="chapter-detail"]/div/ol/li[2]/a/text()').extract_first()
+		story_name = response.xpath('//h1[@class="entry-title"]/text()').extract_first()
 
 		if (not story_name):
-			story_name = response.xpath('//*[@id="manga-detail"]/div[2]/h1/text()').extract_first()
+			story_name = response.xpath('//*[@id="trang_doc"]/div/div/div/div/p/span[5]/a/text()').extract_first()
 
 			if story_name:
 				story_name = story_name.strip().strip(' <>')
 
-		chapter_name = response.xpath('//*[@id="chapter-detail"]/div/ol/li[3]/a/text()').extract_first()
-		author_name = response.xpath('//*[@id="manga-detail"]/div[2]/div[1]/a/text()').extract_first()
-		translator_name = response.xpath('//*[@id="manga-detail"]/div[2]/div[2]/a/text()').extract_first()
-		category = response.xpath('//*[@id="manga-detail"]/div[2]/div[4]/a[position()>0]/text()').extract()
-		summary = None
+		chapter_name = response.xpath('//h1[@class="name_chapter entry-title"]/text()').extract_first()
+		author_name = response.xpath('//ul[@class="truyen_info_right"]/li[2]/a/text()').extract_first()
+		translator_name = response.xpath('//ul[@class="truyen_info_right"]/li[5]/a/text()').extract_first()
+		category = response.xpath('//ul[@class="truyen_info_right"]/li[3]/a/text()').extract()
+		summary = response.xpath('//div[@class="entry-content"]/p').extract()
 
 		print ("==========================================")
 		print(author_name, translator_name, category)
@@ -64,6 +63,11 @@ class BetalSpider(CrawlSpider):
 			soup = BeautifulSoup(', '.join(category), 'html.parser')
 			category = soup.get_text()
 			category = re.sub('\n', ',', category).strip()
+
+		if summary:
+			soup = BeautifulSoup(', '.join(summary), 'html.parser')
+			summary = soup.get_text()
+			summary = re.sub('\n', ',', summary).strip()
 
 		print (response.url)
 
@@ -82,8 +86,19 @@ class BetalSpider(CrawlSpider):
 			if chapter_name:
 				chapter_name = chapter_name.strip()
 				chapter_id = u.convertStringToId(chapter_name)
-				chapter_index = int(float(response.xpath('count(//*[@id="ddl_listchap"]/option[@selected]/preceding-sibling::option)').extract_first()))
-				chapter_total = int(float(response.xpath('count(//*[@id="ddl_listchap"]/option)').extract_first()))
+
+				# reverse index
+				chapter_index = \
+					int(float(	\
+						response.xpath(	\
+							'count((//select)[1]/option[@value="' + response.url +'"]/preceding-sibling::option)').extract_first()))
+
+
+				chapter_total = int(float(response.xpath('count((//select)[1][@class="select-chapter"]/option)').extract_first()))
+
+				# chapter is sorted in reverted order
+				chapter_index = chapter_total - chapter_index 
+
 				loader.add_value('chapter_name', chapter_name) 
 				loader.add_value('chapter_index', chapter_index)
 				loader.add_value('chapter_total', chapter_total) 
