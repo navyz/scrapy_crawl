@@ -27,7 +27,8 @@ class BetalSpider(CrawlSpider):
 		'JOBDIR': '/exdata/download/comic/betal/_job/',
 		'IM_MODULE': 'scrapy_crawl.images_pipelines.MyImagePipeline',
 		'IMAGES_MIN_HEIGHT': 300,
-		'IMAGES_MIN_WIDTH': 200
+		'IMAGES_MIN_WIDTH': 200,
+                'LOG_LEVEL': 'INFO'
 	}
 
 	allowed_domains = ['www.hentailx.com']
